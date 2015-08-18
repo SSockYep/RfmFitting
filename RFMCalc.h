@@ -47,9 +47,11 @@ typedef struct tagRFMCalcPara
 }RFMCalcPara;
 
 void setFormerMat(MatrixXd& mat, int idx, double x, double y, double z);
+void setFormerMatQuad(MatrixXd& mat, int idx, double x, double y, double z);
 VectorXd solveMat(MatrixXd& SRC_A, VectorXd& B);
-void setupWeightMatrix(MatrixXd& wMat, double* denominator, int nGeoPts, double *pGeoPts);
-void squareMat(MatrixXd& mat);
+void setupWeightMatrix(MatrixXd& wMat, double* denominator, vector<double> geoPts);
+void setupWeightMatrixQuad(MatrixXd& wMat, double* denominator, vector<double> geoPts);
+//void squareMat(MatrixXd& mat);
 
 int rfmCalc(vector<double> imgPts, vector<double> geoPts, \
 					RPCparas& rpcs, RFMCalcPara para, RFMType rfmType = Three_Order_Coefs);
