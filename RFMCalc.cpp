@@ -12,9 +12,9 @@ int rfmCalc(vector<double> imgPts, vector<double> geoPts, \
 			return -1;
 		}
 
-		MatrixXd M_mat(imgPts.size()/2, 19);
-		MatrixXd M_mat_cpy(imgPts.size()/2, 19);
-		MatrixXd N_mat(imgPts.size()/2, 19);
+		MatrixXd M_mat(imgPts.size()/2, 39);
+		MatrixXd M_mat_cpy(imgPts.size()/2, 39);
+		MatrixXd N_mat(imgPts.size()/2, 39);
 		VectorXd row_M(imgPts.size()/2), col_N(imgPts.size()/2);
 		
 		M_mat.setZero();
