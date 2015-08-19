@@ -5,16 +5,17 @@ int rfmCalc(vector<double> imgPts, vector<double> geoPts, \
 {
 	if(rfmType == Three_Order_Coefs)
 	{
-		if(imgPts.size() != geoPts.size)
+		double first_sqrt_mean;
+		if(imgPts.size()/2 != geoPts.size()/3)
 		{
 			cout << "error occured" << endl;
 			return -1;
 		}
 
-		MatrixXd M_mat(imgPts.size(), 19);
-		MatrixXd M_mat_cpy(imgPts.size(), 19);
-		MatrixXd N_mat(imgPts.size(), 19);
-		VectorXd row_M(imgPts.size()), col_M(imgPts.size());
+		MatrixXd M_mat(imgPts.size()/2, 19);
+		MatrixXd M_mat_cpy(imgPts.size()/2, 19);
+		MatrixXd N_mat(imgPts.size()/2, 19);
+		VectorXd row_M(imgPts.size()/2), col_N(imgPts.size()/2);
 		
 		M_mat.setZero();
 		M_mat_cpy.setZero();
@@ -23,15 +24,15 @@ int rfmCalc(vector<double> imgPts, vector<double> geoPts, \
 		col_N.setZero();
 
 		//init first values
-		for(int i=0; i<nImgPts; i++)
+		for(int i=0; i<imgPts.size()/2; i++)
 		{
 			double cX, cY, cZ;
 			double iX, iY;
 			cX = (geoPts[3*i] - rpcs.dObjXOff) / rpcs.dObjXScale;
 			cY = (geoPts[3*i+1] - rpcs.dObjYOff) / rpcs.dObjYScale ;
 			cZ = (geoPts[3*i+2] - rpcs.dObjZOff) / rpcs.dObjZScale;
-			iX = (pImgPts[2*i] - rpcs.dXOff) / rpcs.dXScale;
-			iY = (pImgPts[2*i] - rpcs.dYOff) / rpcs.dYScale;
+			iX = (imgPts[2*i] - rpcs.dXOff) / rpcs.dXScale;
+			iY = (imgPts[2*i] - rpcs.dYOff) / rpcs.dYScale;
 
 			row_M(i) = iX;
 			col_N(i) = iY;
@@ -89,9 +90,9 @@ int rfmCalc(vector<double> imgPts, vector<double> geoPts, \
 		error_vector = (M_mat_cpy * r_coeff) - error_vector;
 
 		double sum = 0;
-		for(int i = 0; i < nImgPts; i++)
+		for(int i = 0; i < imgPts.size()/2; i++)
 			sum += pow(error_vector(i), 2.0);
-		first_sqrt_mean = sqrt(sum/nImgPts);
+		first_sqrt_mean = sqrt(sum/imgPts.size()/2);
 		/*
 		 * a: samp_num_coeff
 		 * b: samp_den_coeff
@@ -170,9 +171,9 @@ int rfmCalc(vector<double> imgPts, vector<double> geoPts, \
 
 			double sum = 0;
 			double sqrt_mean;
-			for(int i = 0; i < nImgPts; i++)
+			for(int i = 0; i < imgPts.size()/2; i++)
 				sum += pow(error_vector(i), 2.0);
-			sqrt_mean = sqrt(sum/nImgPts);
+			sqrt_mean = sqrt(sum/imgPts.size()/2);
 
 			for(int i=0; i<20; i++)
 				rpcs.c[i] = r_coeff(i);
@@ -202,16 +203,17 @@ int rfmCalc(vector<double> imgPts, vector<double> geoPts, \
 	
 	else if(rfmType == Two_Order_Coefs)
 	{
-		if(imgPts.size() != geoPts.size)
+		double first_sqrt_mean;
+		if(imgPts.size()/2 != geoPts.size()/3)
 		{
 			cout << "error occured" << endl;
 			return -1;
 		}
 
-		MatrixXd M_mat(imgPts.size(), 19);
-		MatrixXd M_mat_cpy(imgPts.size(), 19);
-		MatrixXd N_mat(imgPts.size(), 19);
-		VectorXd row_M(imgPts.size()), col_M(imgPts.size());
+		MatrixXd M_mat(imgPts.size()/2, 19);
+		MatrixXd M_mat_cpy(imgPts.size()/2, 19);
+		MatrixXd N_mat(imgPts.size()/2, 19);
+		VectorXd row_M(imgPts.size()/2), col_N(imgPts.size()/2);
 		
 		M_mat.setZero();
 		M_mat_cpy.setZero();
@@ -220,15 +222,15 @@ int rfmCalc(vector<double> imgPts, vector<double> geoPts, \
 		col_N.setZero();
 
 		//init first values
-		for(int i=0; i<nImgPts; i++)
+		for(int i=0; i<imgPts.size()/2; i++)
 		{
 			double cX, cY, cZ;
 			double iX, iY;
 			cX = (geoPts[3*i] - rpcs.dObjXOff) / rpcs.dObjXScale;
 			cY = (geoPts[3*i+1] - rpcs.dObjYOff) / rpcs.dObjYScale ;
 			cZ = (geoPts[3*i+2] - rpcs.dObjZOff) / rpcs.dObjZScale;
-			iX = (pImgPts[2*i] - rpcs.dXOff) / rpcs.dXScale;
-			iY = (pImgPts[2*i] - rpcs.dYOff) / rpcs.dYScale;
+			iX = (imgPts[2*i] - rpcs.dXOff) / rpcs.dXScale;
+			iY = (imgPts[2*i] - rpcs.dYOff) / rpcs.dYScale;
 
 			row_M(i) = iX;
 			col_N(i) = iY;
@@ -286,9 +288,9 @@ int rfmCalc(vector<double> imgPts, vector<double> geoPts, \
 		error_vector = (M_mat_cpy * r_coeff) - error_vector;
 
 		double sum = 0;
-		for(int i = 0; i < nImgPts; i++)
+		for(int i = 0; i < imgPts.size()/2; i++)
 			sum += pow(error_vector(i), 2.0);
-		first_sqrt_mean = sqrt(sum/nImgPts);
+		first_sqrt_mean = sqrt(sum/imgPts.size()/2);
 		/*
 		 * a: samp_num_coeff
 		 * b: samp_den_coeff
@@ -367,9 +369,9 @@ int rfmCalc(vector<double> imgPts, vector<double> geoPts, \
 
 			double sum = 0;
 			double sqrt_mean;
-			for(int i = 0; i < nImgPts; i++)
+			for(int i = 0; i < imgPts.size()/2; i++)
 				sum += pow(error_vector(i), 2.0);
-			sqrt_mean = sqrt(sum/nImgPts);
+			sqrt_mean = sqrt(sum/imgPts.size()/2);
 
 			for(int i=0; i<10; i++)
 				rpcs.c[i] = r_coeff(i);
@@ -400,31 +402,31 @@ int rfmCalc(vector<double> imgPts, vector<double> geoPts, \
 
 int rfmGetNormalizedCoefs(vector<double> imgPts, vector<double> geoPts, RPCparas& rpcs)
 {
-	if ( imgPts.size() != geoPts.size() )
+	if ( imgPts.size()/2 != geoPts.size()/3 )
 	{
 		return -1;
 	}
 	vector<double> vecImgX, vecImgY, vecObjX, vecObjY, vecObjZ;
-	for ( int i = 0; i < nImgPts; ++i )
+	for ( int i = 0; i < imgPts.size()/2; ++i )
 	{
-		rpcs.dXOff += pImgPts[2*i];
-		rpcs.dYOff += pImgPts[2*i+1];
-		rpcs.dObjXOff += pGeoPts[3*i];
-		rpcs.dObjYOff += pGeoPts[3*i+1];
-		rpcs.dObjZOff += pGeoPts[3*i+2];
+		rpcs.dXOff += imgPts[2*i];
+		rpcs.dYOff += imgPts[2*i+1];
+		rpcs.dObjXOff += geoPts[3*i];
+		rpcs.dObjYOff += geoPts[3*i+1];
+		rpcs.dObjZOff += geoPts[3*i+2];
 
-		vecImgX.push_back( pImgPts[2*i] );
-		vecImgY.push_back( pImgPts[2*i+1] );
+		vecImgX.push_back( imgPts[2*i] );
+		vecImgY.push_back( imgPts[2*i+1] );
 
-		vecObjX.push_back( pGeoPts[3*i] );
-		vecObjY.push_back( pGeoPts[3*i+1] );
-		vecObjZ.push_back( pGeoPts[3*i+2] );
+		vecObjX.push_back( geoPts[3*i] );
+		vecObjY.push_back( geoPts[3*i+1] );
+		vecObjZ.push_back( geoPts[3*i+2] );
 	}
-	rpcs.dXOff /= nImgPts;
-	rpcs.dYOff /= nImgPts;
-	rpcs.dObjXOff /= nGeoPts;
-	rpcs.dObjYOff /= nGeoPts;
-	rpcs.dObjZOff /= nGeoPts;
+	rpcs.dXOff /= imgPts.size()/2;
+	rpcs.dYOff /= imgPts.size()/2;
+	rpcs.dObjXOff /= geoPts.size()/3;
+	rpcs.dObjYOff /= geoPts.size()/3;
+	rpcs.dObjZOff /= geoPts.size()/3;
 
 	double dImgXMax = *max_element( vecImgX.begin(), vecImgX.end() );
 	double dImgXMin = *min_element( vecImgX.begin(), vecImgX.end() );
@@ -496,7 +498,7 @@ void setFormerMatQuad(MatrixXd& mat, int idx, double x, double y, double z)
 
 		mat(idx, 4) = z*y;
 		mat(idx, 5) = z*x;
-		mat(idx, 6) = y*x;f
+		mat(idx, 6) = y*x;
 
 		mat(idx, 7) = z*z;
 		mat(idx, 8) = y*y;
@@ -506,7 +508,7 @@ void setFormerMatQuad(MatrixXd& mat, int idx, double x, double y, double z)
 
 void setupWeightMatrix(MatrixXd& wMat, double* denominator, vector<double> geoPts)
 {
-		for(int i=0; i<nGeoPts; i++){
+		for(int i=0; i<geoPts.size()/3; i++){
 		double x, y, z;
 		x = geoPts[3*i];
 		y = geoPts[3*i+1];
@@ -541,7 +543,7 @@ void setupWeightMatrix(MatrixXd& wMat, double* denominator, vector<double> geoPt
 
 void setupWeightMatrixQuad(MatrixXd& wMat, double* denominator, vector<double> geoPts)
 {
-		for(int i=0; i<nGeoPts; i++){
+		for(int i=0; i<geoPts.size()/3; i++){
 		double x, y, z;
 		x = geoPts[3*i];
 		y = geoPts[3*i+1];
@@ -563,4 +565,243 @@ void setupWeightMatrixQuad(MatrixXd& wMat, double* denominator, vector<double> g
 	}
 
 }
+
+int rfmReadGeoPtsAndNormalizedCoefs(const char* strGeoFile, vector<double>& imgPts, vector<double>& geoPts, \
+					RPCparas& rpcs)
+{
+	FILE *pF = NULL;
+	if(NULL == (pF = fopen(strGeoFile, "r")) )
+		return -1;
+
+	double dCurVal = 0;
+
+	fscanf( pF, "SAMPLE_OFF:	%lf\n", &rpcs.dXOff );
+	fscanf( pF, "LINE_OFF:	%lf\n", &rpcs.dYOff );
+	fscanf( pF, "LON_OFF:  %lf\n", &rpcs.dObjXOff );
+	fscanf( pF, "LAT_OFF:    %lf\n", &rpcs.dObjYOff );
+	fscanf( pF, "HEIGHT_OFF:    %lf\n", &rpcs.dObjZOff );
+
+	fscanf( pF, "SAMPLE_SCALE:	%lf\n", &rpcs.dXScale );
+	fscanf( pF, "LINE_SCALE:	%lf\n", &rpcs.dYScale );
+	fscanf( pF, "LON_SCALE:   %lf\n", &rpcs.dObjXScale );
+	fscanf( pF, "LAT_SCALE:  %lf\n", &rpcs.dObjYScale );
+	fscanf( pF, "HEIGHT_SCALE:  %lf\n", &rpcs.dObjZScale );
+
+	double dTmp1, dTmp2, dTmp3, dTmp4, dTmp5;
+	dTmp1 = dTmp2 = dTmp3 = dTmp4 = dTmp5 = 0;
+
+	fscanf( pF, "%lf %lf %lf %lf %lf\n", &dTmp1, &dTmp2, &dTmp3, &dTmp4, &dTmp5 );
+	fscanf( pF, "%lf %lf %lf %lf %lf\n", &dTmp1, &dTmp2, &dTmp3, &dTmp4, &dTmp5 );
+	fscanf( pF, "%lf %lf %lf %lf %lf\n", &dTmp1, &dTmp2, &dTmp3, &dTmp4, &dTmp5 );
+	fscanf( pF, "%lf %lf %lf %lf %lf\n", &dTmp1, &dTmp2, &dTmp3, &dTmp4, &dTmp5 );
+
+	int nTmp1, nTmp2;
+	vector<double> vecRes;
+	do
+	{
+		fscanf( pF, "%lf %lf %lf %lf %lf", &dTmp1, &dTmp2, &dTmp3, &dTmp4, &dTmp5  );
+		vecRes.push_back( dTmp1 );
+		vecRes.push_back( dTmp2 );
+		vecRes.push_back( dTmp3 );
+		vecRes.push_back( dTmp4 );
+		vecRes.push_back( dTmp5 );
+	} while ( fgetc(pF) != EOF );
+	fclose(pF);
+
+	imgPts.resize(vecRes.size() / 5 * 2);
+	geoPts.resize(vecRes.size() / 5 * 3);
+
+	for ( int i = 0; i < imgPts.size()/2; ++i )
+	{
+		imgPts[2*i] = vecRes[5*i];
+		imgPts[2*i+1] = vecRes[5*i+1];
+
+		geoPts[3*i] = vecRes[5*i+2];
+		geoPts[3*i+1] = vecRes[5*i+3];
+		geoPts[3*i+2] = vecRes[5*i+4];
+	}
+	return 1;
+}
+
+int rfmWriteRPCs(const char* strRPCsFile, RPCparas& rpcs, RFMType rfmType)
+{
+	FILE* fp;
+
+	if((fp = fopen(strRPCsFile, "w")) == NULL)
+	{
+		printf("failed");
+		return -1;
+	}
+
+	char str[50];
+	int i;
+
+	printf("store a Corrected IKONOS RPC file.\n");
+	sprintf(str, "LINE_OFF: %+#010.2f pixels\n", rpcs.dYOff);
+	fputs(str, fp);
+
+	sprintf(str, "SAMP_OFF: %+#010.2f pixels\n", rpcs.dXOff);
+	fputs(str, fp);
+
+	sprintf(str, "LAT_OFF: %+#012.8f degrees\n", rpcs.dObjYOff);
+	fputs(str, fp);
+
+	sprintf(str, "LONG_OFF: %+#013.8f degrees\n", rpcs.dObjXOff);
+	fputs(str, fp);
+
+	sprintf(str, "HEIGHT_OFF: %+#09.3f meters\n", rpcs.dObjZOff);
+	fputs(str, fp);
+
+	sprintf(str, "LINE_SCALE: %+#010.2f pixels\n", rpcs.dYScale);
+	fputs(str, fp);
+
+
+	sprintf(str, "SAMP_SCALE: %+#010.2f pixels\n", rpcs.dXScale);
+	fputs(str, fp);
+
+	sprintf(str, "LAT_SCALE: %+#012.8f degrees\n", rpcs.dObjYScale);
+	fputs(str, fp);
+
+	sprintf(str, "LONG_SCALE: %+#013.8f degrees\n", rpcs.dObjXScale);
+	fputs(str, fp);
+
+	sprintf(str, "HEIGHT_SCALE: %+#09.3f meters\n", rpcs.dObjZScale);
+	fputs(str, fp);
+
+	if (rfmType == Three_Order_Coefs)
+	{
+		for(i = 0; i < 20; i++)
+		{
+			sprintf(str, "LINE_NUM_COEFF_%d: %+.15E\n", i+1, rpcs.c[i]);
+			fputs(str, fp);
+		}
+		for(i = 0; i < 20; i++)
+		{
+			sprintf(str, "LINE_DEN_COEFF_%d: %+.15E\n", i+1, rpcs.d[i]);
+			fputs(str, fp);
+		}
+		for(i = 0; i < 20; i++)
+		{
+			sprintf(str, "SAMP_NUM_COEFF_%d: %+.15E\n", i+1, rpcs.a[i]);
+			fputs(str, fp);
+		}
+		for(i = 0; i < 20; i++)
+		{
+			sprintf(str, "SAMP_DEN_COEFF_%d: %+.15E\n", i+1, rpcs.b[i]);
+			fputs(str, fp);
+		}
+	}
+	else
+	{
+		for(i = 0; i < 10; i++)
+		{
+			sprintf(str, "LINE_NUM_COEFF_%d: %+.15E\n", i+1, rpcs.c[i]);
+			fputs(str, fp);
+		}
+		for(i = 0; i < 10; i++)
+		{
+			sprintf(str, "LINE_DEN_COEFF_%d: %+.15E\n", i+1, rpcs.d[i]);
+			fputs(str, fp);
+		}
+		for(i = 0; i < 10; i++)
+		{
+			sprintf(str, "SAMP_NUM_COEFF_%d: %+.15E\n", i+1, rpcs.a[i]);
+			fputs(str, fp);
+		}
+		for(i = 0; i < 10; i++)
+		{
+			sprintf(str, "SAMP_DEN_COEFF_%d: %+.15E\n", i+1, rpcs.b[i]);
+			fputs(str, fp);
+		}
+	}
+
+	return 1;
+}
+
+
+double extractnumber(const char* str)
+{
+	int count = 0;
+	int k = 0;
+	char value[30];
+
+	memset(value, 0, 30);
+
+	while(str[count] != ' ')
+		count++;
+
+	while(str[count+1] != ' ' && str[count+1] != '\n')
+	{
+		value[k] = str[count+1];
+		k++;
+		count++;
+	}
+
+	return atof(value);
+}
+
+int rfmReadRpcs(const char* strRPCsFile, RPCparas& rpcs, RFMType rfmType)
+{
+	FILE * fp = NULL;
+
+	if((fp = fopen(strRPCsFile, "r")) == NULL)
+	{
+		return 0;
+	}
+
+	double num = 0;
+	int i;
+	char str[50];
+
+
+	//read a IKONOS RPC file.
+	printf("read a IKONOS RPC file.\n");
+	fgets(str, 50, fp);
+	rpcs.dYOff = extractnumber(str);
+	fgets(str, 50, fp);
+	rpcs.dXOff = extractnumber(str);
+	fgets(str, 50, fp);
+	rpcs.dObjYOff = extractnumber(str);
+
+	fgets(str, 50, fp);
+	rpcs.dObjXOff = extractnumber(str);
+	fgets(str, 50, fp);
+	rpcs.dObjZOff = extractnumber(str);
+	fgets(str, 50, fp);
+	rpcs.dYScale = extractnumber(str);
+	fgets(str, 50, fp);
+	rpcs.dXScale = extractnumber(str);
+	fgets(str, 50, fp);
+	rpcs.dObjYScale = extractnumber(str);
+	fgets(str, 50, fp);
+	rpcs.dObjXScale = extractnumber(str);
+	fgets(str, 50, fp);
+	rpcs.dObjZScale = extractnumber(str);
+
+	for(i = 0; i < 20; i++)
+	{
+		fgets(str, 50, fp);
+		rpcs.c[i] = extractnumber(str);
+	}
+	for(i = 0; i < 20; i++)
+	{
+		fgets(str, 50, fp);
+		rpcs.d[i] = extractnumber(str);
+	}
+	for(i = 0; i < 20; i++)
+	{
+		fgets(str, 50, fp);
+		rpcs.a[i] = extractnumber(str);
+	}
+	for(i = 0; i < 20; i++)
+	{
+		fgets(str, 50, fp);
+		rpcs.b[i] = extractnumber(str);
+	}
+
+
+	fclose(fp);
+	return 1;	
+}
+
 

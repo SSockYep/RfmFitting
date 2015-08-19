@@ -2,11 +2,14 @@
 #define _RFM_CALC_H_
 
 #include <vector>
+#include <iostream>
+#include <stdio.h>
+#include <stdlib.h>
 #include <gsl/gsl_blas.h>
 #include <gsl/gsl_linalg.h>
 #include <gsl/gsl_statistics.h>
-#include <Eigen/Dense>
-#include <Eigen/Core>
+#include "Eigen/Dense"
+#include "Eigen/Core"
 
 using namespace Eigen;
 using namespace std;
@@ -37,12 +40,14 @@ typedef struct tagRFMCalcPara
 {
 	int nL_Curve_Points;
 	double dICCVThres;
+	int nMaxItera;
+	double dThres;
 	tagRFMCalcPara()
 	{
 		nL_Curve_Points = 200;
 		dICCVThres = 1.0e-4;
 		nMaxItera = 20;
-		dThres - 1.0e-6;
+		dThres = 1.0e-6;
 	}
 }RFMCalcPara;
 
@@ -57,9 +62,10 @@ int rfmCalc(vector<double> imgPts, vector<double> geoPts, \
 					RPCparas& rpcs, RFMCalcPara para, RFMType rfmType = Three_Order_Coefs);
 
 int rfmGetNormalizedCoefs(vector<double> imgPts, vector<double> geoPts, RPCparas& rpcs );
-int rfmReadGeoPtsAndNormalizedCoefs(const char* strGeoFile, vector<double>& imgPts, vector<double>& geoPts, \
-					RPCparas& rpcs, RFMType rfmType = Three_Order_Coefs);
-int rfmWriteRPCs(const char* strRPCsFile, PRCparas& rpcs, RFMType rfmType = Three_Order_Coefs);
+int rfmReadGeoPtsAndNormalizedCoefs(const char* strGeoFile, vector<double>& imgPts, vector<double>& geoPts, RPCparas& rpcs);
+int rfmWriteRPCs(const char* strRPCsFile, RPCparas& rpcs, RFMType rfmType = Three_Order_Coefs);
 int rfmReadRPCs(const char* strRPCsFile, RPCparas& rpcs, RFMType rfmType = Three_Order_Coefs);
+
+double extractnumber(const char* str);
 
 #endif
