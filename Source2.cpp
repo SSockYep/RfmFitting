@@ -17,6 +17,9 @@ int main(int argc, char** argv)
 	gcp_name = (char*)malloc(sizeof(char)*(strlen(argv[1])+1));
 	w_file_name = (char*)malloc(sizeof(char)*(strlen(argv[2])+1));
 
+	strcpy(gcp_name, argv[1]);
+	strcpy(w_file_name, argv[2]);
+
 	rfmReadGeoPtsAndNormalizedCoefs(gcp_name, imgPts, geoPts, rpcs);
 
 	rfmCalc(imgPts, geoPts, rpcs, rfmCalcPara, Two_Order_Coefs);

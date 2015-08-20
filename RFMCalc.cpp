@@ -447,7 +447,6 @@ int rfmGetNormalizedCoefs(vector<double> imgPts, vector<double> geoPts, RPCparas
 	rpcs.dObjXScale = max(fabs(dObjXMax-rpcs.dObjXOff), fabs(dObjXMin-rpcs.dObjXOff));
 	rpcs.dObjYScale = max(fabs(dObjYMax-rpcs.dObjYOff), fabs(dObjYMin-rpcs.dObjYOff));
 	rpcs.dObjZScale = max(fabs(dObjZMax-rpcs.dObjZOff), fabs(dObjZMin-rpcs.dObjZOff));
-
 	return 1;
 }
 
@@ -571,7 +570,10 @@ int rfmReadGeoPtsAndNormalizedCoefs(const char* strGeoFile, vector<double>& imgP
 {
 	FILE *pF = NULL;
 	if(NULL == (pF = fopen(strGeoFile, "r")) )
+	{
+		cout << "can't read file" << endl;
 		return -1;
+	}
 
 	double dCurVal = 0;
 
@@ -586,6 +588,7 @@ int rfmReadGeoPtsAndNormalizedCoefs(const char* strGeoFile, vector<double>& imgP
 	fscanf( pF, "LON_SCALE:   %lf\n", &rpcs.dObjXScale );
 	fscanf( pF, "LAT_SCALE:  %lf\n", &rpcs.dObjYScale );
 	fscanf( pF, "HEIGHT_SCALE:  %lf\n", &rpcs.dObjZScale );
+	cout << "dObjZScale: " << rpcs.dObjZScale << endl;
 
 	double dTmp1, dTmp2, dTmp3, dTmp4, dTmp5;
 	dTmp1 = dTmp2 = dTmp3 = dTmp4 = dTmp5 = 0;
@@ -620,6 +623,7 @@ int rfmReadGeoPtsAndNormalizedCoefs(const char* strGeoFile, vector<double>& imgP
 		geoPts[3*i+1] = vecRes[5*i+3];
 		geoPts[3*i+2] = vecRes[5*i+4];
 	}
+	cout << "before dObjZScale: " << rpcs.dObjZScale << endl;
 	return 1;
 }
 
@@ -799,6 +803,7 @@ int rfmReadRpcs(const char* strRPCsFile, RPCparas& rpcs, RFMType rfmType)
 		rpcs.b[i] = extractnumber(str);
 	}
 
+	cout << "after dObjZScale: " << rpcs.dObjZScale << endl;
 
 	fclose(fp);
 	return 1;	
