@@ -5,8 +5,8 @@ int main(int argc, char** argv)
 {
 	vector<double> imgPts, geoPts;
 	char* gcp_name, * w_file_name;
-	int max_iter = 10;
-	double thre = 0.1;
+	int max_iter;
+	double thre;
 	RPCparas rpcs;
 	RFMCalcPara rfmCalcPara;
 	RFMType rfmType = Three_Order_Coefs;

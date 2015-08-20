@@ -1,5 +1,11 @@
+Options Information
+-infile: input file name
+-outfile: output file name
+-order: Coefs order (2 or 3, default is 3)
+-max_iter: maximum iteration number (default is 20)
+-threshold: threshold (default is 1.0e-4)
+-out_type: output type standard or individual (default is individual)
+	standard - 20 Coefs regardless of order
+	individual - 10 Coefs for two order, 20 for three order
 
-
-2015.08.18
-Start to edit
 
