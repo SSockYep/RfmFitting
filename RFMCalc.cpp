@@ -3,8 +3,10 @@
 int rfmCalc(vector<double> imgPts, vector<double> geoPts, \
 					RPCparas& rpcs, RFMCalcPara para, RFMType rfmType)
 {
+	cout << "Calculation Start" << endl;
 	if(rfmType == Three_Order_Coefs)
 	{
+		cout << "Three order coefs" << endl;
 		double first_sqrt_mean;
 		if(imgPts.size()/2 != geoPts.size()/3)
 		{
@@ -143,8 +145,8 @@ int rfmCalc(vector<double> imgPts, vector<double> geoPts, \
 			setupWeightMatrix(weight_N, rpcs.b, geoPts);
 			not_squared_weight_M = weight_M;
 
-			weight_M = weight_M * weight_M;
-			weight_N = weight_N * weight_N;
+			squareMat(weight_M, imgPts.size()/2);
+			squareMat(weight_N, imgPts.size()/2);
 			//squareMat(weight_M);
 			//squareMat(weight_N);
 			// (NxM) * (MxM) => (NxM)
@@ -203,6 +205,7 @@ int rfmCalc(vector<double> imgPts, vector<double> geoPts, \
 	
 	else if(rfmType == Two_Order_Coefs)
 	{
+		cout << "Two Order Coefs" << endl;
 		double first_sqrt_mean;
 		if(imgPts.size()/2 != geoPts.size()/3)
 		{
@@ -270,6 +273,7 @@ int rfmCalc(vector<double> imgPts, vector<double> geoPts, \
 		workMat.setZero();
 		error_vector.setZero();
 
+
 		workMat = M_mat.transpose() * weight_M;
 		row_M_weighted = workMat * row_M;
 		M_weighted = workMat * M_mat;
@@ -326,6 +330,7 @@ int rfmCalc(vector<double> imgPts, vector<double> geoPts, \
 		//iterative Routine
 		int iter_n = 1;
 
+		cout << "iteration start" << endl;
 		int count = 0;
 		do
 		{
@@ -341,8 +346,8 @@ int rfmCalc(vector<double> imgPts, vector<double> geoPts, \
 			setupWeightMatrixQuad(weight_N, rpcs.b, geoPts);
 			not_squared_weight_M = weight_M;
 
-			weight_M = weight_M * weight_M;
-			weight_N = weight_N * weight_N;
+			squareMat(weight_M, imgPts.size()/2);
+			squareMat(weight_N, imgPts.size()/2);
 			//squareMat(weight_M);
 			//squareMat(weight_N);
 			// (NxM) * (MxM) => (NxM)
@@ -542,7 +547,7 @@ void setupWeightMatrix(MatrixXd& wMat, double* denominator, vector<double> geoPt
 
 void setupWeightMatrixQuad(MatrixXd& wMat, double* denominator, vector<double> geoPts)
 {
-		for(int i=0; i<geoPts.size()/3; i++){
+	for(int i=0; i<geoPts.size()/3; i++){
 		double x, y, z;
 		x = geoPts[3*i];
 		y = geoPts[3*i+1];
@@ -588,7 +593,6 @@ int rfmReadGeoPtsAndNormalizedCoefs(const char* strGeoFile, vector<double>& imgP
 	fscanf( pF, "LON_SCALE:   %lf\n", &rpcs.dObjXScale );
 	fscanf( pF, "LAT_SCALE:  %lf\n", &rpcs.dObjYScale );
 	fscanf( pF, "HEIGHT_SCALE:  %lf\n", &rpcs.dObjZScale );
-	cout << "dObjZScale: " << rpcs.dObjZScale << endl;
 
 	double dTmp1, dTmp2, dTmp3, dTmp4, dTmp5;
 	dTmp1 = dTmp2 = dTmp3 = dTmp4 = dTmp5 = 0;
@@ -623,7 +627,6 @@ int rfmReadGeoPtsAndNormalizedCoefs(const char* strGeoFile, vector<double>& imgP
 		geoPts[3*i+1] = vecRes[5*i+3];
 		geoPts[3*i+2] = vecRes[5*i+4];
 	}
-	cout << "before dObjZScale: " << rpcs.dObjZScale << endl;
 	return 1;
 }
 
@@ -803,10 +806,16 @@ int rfmReadRpcs(const char* strRPCsFile, RPCparas& rpcs, RFMType rfmType)
 		rpcs.b[i] = extractnumber(str);
 	}
 
-	cout << "after dObjZScale: " << rpcs.dObjZScale << endl;
 
 	fclose(fp);
 	return 1;	
 }
+
+void squareMat(MatrixXd& mat, int size)
+{
+	for(int i = 0; i < size; i++)
+		mat(i, i) = mat(i, i) * mat(i, i);
+}
+
 
 

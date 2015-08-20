@@ -21,7 +21,6 @@ int main(int argc, char** argv)
 	strcpy(w_file_name, argv[2]);
 
 	rfmReadGeoPtsAndNormalizedCoefs(gcp_name, imgPts, geoPts, rpcs);
-	cout << "after dObjZScale: " << rpcs.dObjZScale << endl;
 
 	rfmCalc(imgPts, geoPts, rpcs, rfmCalcPara);
 
