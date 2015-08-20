@@ -32,8 +32,8 @@ typedef struct tagRPCCoefs
 
 typedef enum tagRFMType
 {
-	Three_Order_Coefs = 0,
-	Two_Order_Coefs = 1,
+	Three_Order_Coefs,
+	Two_Order_Coefs
 }RFMType;
 
 typedef struct tagRFMCalcPara
